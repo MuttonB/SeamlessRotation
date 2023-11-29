@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+
+        body {
+            background-color: black;
+        }
+
+        .main {
+            width: 500px;
+            height: 390px;
+            position: relative;
+            overflow: hidden;
+            margin: 50px auto;
+        }
+
+        .contant {
+            display: flex;
+            position: absolute;
+            left: 0;
+        }
+
+        .main .contant img {
+            width: 500px;
+            height: 390px;
+            position: relative;
+            border-radius: 10px;
+        }
+
+        .controls {
+            position: absolute;
+            margin: auto;
+            left: 0;
+            right: 0;
+            width: 94%;
+            height: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .controls button {
+            border: 0;
+            height: 40px;
+            width: 40px;
+            border-radius: 6px;
+            font-size: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .controls button:hover {
+            opacity: 0.85;
+        }
+
+        .point {
+            transition: all 0.3s;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .point li {
+            border-radius: 8px;
+            height: 40px;
+            width: 80px;
+            margin-right: 12px;
+            background-color: rgba(255, 255, 255, 0.8);
+            float: left;
+            border: 4px solid transparent;
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+
+        .point li img {
+            width: 100%;
+        }
+
+        .space {
+            width: 80px;
+            height: 40px;
+            border: 4px solid #FF97A3;
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            border-radius: 8px;
+        }
+
+        .poinBox {
+            width: 100%;
+            height: 50px;
+            position: absolute;
+            bottom: 8px;
+            left: 50%;
+            margin-left: -48px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="contant">
+            <img src="img/1.jpg" alt="">
+            <img src="img/2.jpg" alt="">
+            <img src="img/3.jpg" alt="">
+            <img src="img/v2-a9e5429f4340d71114bc19ee206a175c_b.jpg" alt="">
+        </div>
+        <div class="controls">
+            <button id="left">🫲</button>
+            <button id="right">🫱</button>
+        </div>
+        <div class="poinBox">
+            <ul class="point">
+            </ul>
+            <div class="space"></div>
+        </div>
+    </div>
+
+    <script>
+        var main = document.querySelector(".main")
+        var contant = document.querySelector(".contant")
+        var img = document.querySelector(".contant img")
+        var left = document.querySelector("#left")
+        var right = document.querySelector("#right")
+        var index = 0
+        // 生成li
+        var imglen = document.querySelectorAll(".contant img")
+        var ul = document.querySelector(".point")
+        for (let i = 0; i < imglen.length; i++) {
+            var li = document.createElement("li")
+            ul.appendChild(li)
+        }
+        // 向li打印图片
+        var li = document.querySelectorAll(".point li")
+        for (let i = 0; i < imglen.length; i++) {
+            var pushImg = document.createElement("img")
+            li[i].appendChild(pushImg)
+            document.querySelectorAll(".point li img")[i].setAttribute("src", (imglen[i].getAttribute("src")))
+        }
+        ul.style.left = 0 + "px"
+        //  复制首图
+        var cFirst = contant.children[0].cloneNode()
+        contant.appendChild(cFirst)
+        var imglen = document.querySelectorAll(".contant img").length - 1
+        // 左滑
+        left.onclick = function () {
+            index--
+            if (index == -1) {
+                contant.style.left = img.clientWidth * -imglen + "px"
+                contant.style.transition = "none"
+                index = imglen - 1
+            }
+            if (index >= 0) {
+                contant.style.left = img.clientWidth * -index + "px"
+                contant.style.transition = "all 0.3s"
+                ul.style.left = -100 + "px"
+            }
+            changePoint()
+        }
+        // 右滑
+        right.onclick = function () {
+            index++
+            contant.style.left = img.clientWidth * -index + "px"
+            contant.style.transition = "all 0.3s"
+            changePoint()
+            if (index > imglen - 1) {
+                ul.style.left = 0 + "px"
+                setTimeout(moveFirst, 300);
+            }
+        }
+        function moveFirst() {
+            contant.style.left = 0
+            contant.style.transition = "none"
+            index = 0
+        }
+
+        function changePoint() {
+            ul.style.left = (index) * -100 + "px"
+        }
+
+        // 点击小图
+        var pointli = document.querySelectorAll(".point li")
+        for (let i = 0; i < pointli.length; i++) {
+            pointli[i].onclick = function () {
+                index = i
+                changePoint()
+                contant.style.left = img.clientWidth * -index + "px"
+                contant.style.transition = "all 0.3s"
+            }
+        }
+    </script>
+</body>
+
+</html>
